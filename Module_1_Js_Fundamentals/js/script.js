@@ -44,13 +44,38 @@ class laptops{
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+banksession = new bank(0,0,0,0);
+
+
+
 // Here we write the function to populate our html objects with the values from our javascript
 function initializePageValues(){
     
     // we access the banking values through the id on the div
-    document.getElementById("balance").innerText.replace(bank.getBalance);
+    document.getElementById("balance").innerText = banksession.getBalance();
+
+
+
+    console.log("Script Postinitialization");
 }
 
+console.log("Script Preinitialization");
 
 
 initializePageValues();
