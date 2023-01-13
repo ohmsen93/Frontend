@@ -31,13 +31,17 @@
                     <div class="gridTile" id="bank">
                         <h2>Joe Banker</h2>
                         <p id="balance">Balance 200 Kr.</p>
-                        <button>Get a loan</button>
+                        <br>
+                        <p id="loan"></p>
+                        <button id="loanBtn">Get a loan</button>
                     </div>
                     <div class="gridTile" id="work">
                         <h2>Work</h2>
-                        <p>Pay 0 Kr.</p>
-                        <button>Bank</button>
-                        <button>Work</button>
+                        <p id="workBalance">Pay 0 Kr.</p>
+                        <button id="bankBtn">Bank</button>
+                        <button id="workBtn">Work</button>
+                        <button id="repayLoanBtn">repay Loan</button>
+
                     </div>
                     <div class="gridTile" id="laptops">
                         <h2>Laptops</h2>
