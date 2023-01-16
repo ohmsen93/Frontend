@@ -1,4 +1,4 @@
-class bank {
+class Bank {
     constructor(balance, loan, loanBalance){
         this.balance = balance;
         this.loan = loan;
@@ -62,7 +62,7 @@ class work{
     }
 
     //Instanciates our Bank Class.
-    banksession = new bank(100,0,0,0);
+    bankSession = new Bank(100,0,0,0);
 
     getWorkBalance(){
         //returns our workBalance
@@ -78,17 +78,14 @@ class work{
 
     bankTransfer(){
         // first we check if the user has an outstanding loan
-        if(this.banksession.loanBalance != 0){
+        if(this.bankSession.loanBalance != 0){
             // then we check if the loanBalance is below 100
-            if(this.banksession.loanBalance < 100){
-                let remainingFunds = this.workBalance + this.banksession.loanBalance;
+            if(this.bankSession.loanBalance < 100){
+                let remainingFunds = this.workBalance + this.bankSession.loanBalance;
 
                 // if the loanBalance is below 100, we update the balance with the remaining funds, and then we zero our loanBalance with math.abs
-                this.banksession.updateBalance(remainingFunds);
-                this.banksession.updateLoanBalance(Math.abs(this.banksession.loanBalance));
-
-
-
+                this.bankSession.updateBalance(remainingFunds);
+                this.bankSession.updateLoanBalance(Math.abs(this.bankSession.loanBalance));
             } else {
                 // if the loanBalance is above 100, we first calculate 10% of our workBalance.
                 let deduction = this.workBalance*0.1;
@@ -96,12 +93,12 @@ class work{
                 let transferAmmount = this.workBalance-deduction;
         
                 //we then transfer 90% to our bankBalance, and 10% to our loanBalance.
-                this.banksession.updateBalance(transferAmmount);
-                this.banksession.updateLoanBalance(deduction);
+                this.bankSession.updateBalance(transferAmmount);
+                this.bankSession.updateLoanBalance(deduction);
             }
         } else {
             // if we do not have a current loanBalance, we transfer our workBalance directly to our loanBalance.
-            this.banksession.updateBalance(this.workBalance);
+            this.bankSession.updateBalance(this.workBalance);
         }
 
         //Zeroes out the workBalance and loads our page values.
@@ -111,23 +108,23 @@ class work{
 
     loanTransfer(){
         //First we calculate wether we have funds remaining after transfering the money from workBalance to loanBalance.
-        let remainingLoanAmmount = this.workBalance + this.banksession.loanBalance;
+        let remainingLoanAmmount = this.workBalance + this.bankSession.loanBalance;
 
 
-        console.log("workbalance: "+this.workBalance+", loanbalance: "+this.banksession.loanBalance+", remainingLoanAmmount: "+remainingLoanAmmount);
+        console.log("workbalance: "+this.workBalance+", loanbalance: "+this.bankSession.loanBalance+", remainingLoanAmmount: "+remainingLoanAmmount);
 
         //If we have money remaining
         if(remainingLoanAmmount > 0){
             
 
             //we zero out the loanBalance using the current loan balance and Math.abs to turn the negative number positive aka. -200 + 200 = 0
-            this.banksession.updateLoanBalance(Math.abs(this.banksession.loanBalance));
+            this.bankSession.updateLoanBalance(Math.abs(this.bankSession.loanBalance));
             //then we transfer the remaining funds to the bankBalance
-            this.banksession.updateBalance(remainingLoanAmmount);
+            this.bankSession.updateBalance(remainingLoanAmmount);
         } else {
 
             //if we do not have money remaining after the loanTransfer, we simply update the loanBalance and add our workBalance to our loanBalance.
-            this.banksession.updateLoanBalance(this.workBalance);
+            this.bankSession.updateLoanBalance(this.workBalance);
         }
 
         
@@ -139,6 +136,23 @@ class work{
 
 class laptops{
 
+    constructor(apiUrl){
+        this.apiUrl = apiUrl;
+        this.laptopPath = apiUrl+'computers';
+        this.laptopID = '';
+        this.data = {};
+    }
+
+
+
+    async laptopApi(){
+        console.log(this.laptopPath);
+        
+        const req = await fetch(this.laptopPath);
+        const post = await req.json();
+
+        this.data = post;
+    }
 
 
 }
@@ -160,23 +174,23 @@ class laptops{
 
 
 
-worksession = new work(0, 0);
-
+const worksession = new work(0, 0);
+const laptopsession = new laptops('https://hickory-quilled-actress.glitch.me/');
 
 // Here we write the function to populate our html objects with the values from our javascript
 function loadPageValues(){
     
     // we access the banking values through the id on the div
-    document.getElementById("balance").innerText = worksession.banksession.getBalance();
+    document.getElementById("balance").innerText = worksession.bankSession.getBalance();
 
-    document.getElementById("loan").innerText = worksession.banksession.getLoanBalance();
+    document.getElementById("loan").innerText = worksession.bankSession.getLoanBalance();
 
     document.getElementById("workBalance").innerText = worksession.getWorkBalance();
 
     document.getElementById("repayLoanBtn").style.display = 'none';
 
 
-    if(worksession.banksession.loanBalance < 0){
+    if(worksession.bankSession.loanBalance < 0){
         document.getElementById("repayLoanBtn").style.display = 'block';
 
     }
@@ -186,7 +200,7 @@ function loadPageValues(){
 
 
 function loanPrompt(){
-    worksession.banksession.getLoan(worksession.banksession.getBalance(),parseInt(prompt()));
+    worksession.bankSession.getLoan(worksession.bankSession.getBalance(),parseInt(prompt()));
 }
 
 
@@ -205,3 +219,22 @@ document.getElementById("bankBtn").addEventListener("click", () => worksession.b
 
 document.getElementById("repayLoanBtn").addEventListener("click", () => worksession.loanTransfer());
 
+
+
+
+await laptopsession.laptopApi();
+
+let laptopOptions = `<option selected>Pick a laptop</option>`;
+let laptopSelect = document.getElementById("laptopSelect");
+
+
+laptopsession.data.forEach(element => {
+    laptopOptions += `<option data-id='${element.id}'>${element.title}</option>`;
+});
+
+laptopSelect.innerHTML = laptopOptions;
+
+
+
+
+console.log(laptopsession.data);
