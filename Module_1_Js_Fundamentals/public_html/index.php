@@ -34,7 +34,7 @@
                         <h2>Joe Banker</h2>
                         <p id="balance">Balance 200 Kr.</p>
                         <br>
-                        <p id="loan"></p>
+                        <p id="loanBalance"></p>
                         <button class="btn btn-primary mt-auto" id="loanBtn">Get a loan</button>
                     </div>
                     <div class="card col m-2 p-3 bg-light rounded-3 border border-dark" id="work">
@@ -55,11 +55,12 @@
 
                         <div class="mb-3">
                             <select class="form-select form-select-lg" name="" id="laptopSelect">
-
                             </select>
                         </div>
                         <h4>Features:</h4>
-                        <p>Description of the laptop</p>
+                        <div id="laptopFeatures">
+
+                        </div>
                     </div>
                 </div>
                 <div class="row justify-content-center align-items-center g-2">

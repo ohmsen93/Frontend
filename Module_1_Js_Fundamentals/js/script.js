@@ -1,197 +1,43 @@
-class Bank {
-    constructor(balance, loan, loanBalance){
-        this.balance = balance;
-        this.loan = loan;
-        this.loanBalance = loanBalance;
-    }
+// Require and instantiate the classes
+import Bank from './Bank.js';
+const bankInstance = new Bank(100,0,0);
 
-    getBalance(){
-        //returns our balance.
-        return this.balance;
-    }
+import Work from './Work.js';
+const workInstance = new Work(0,100, bankInstance);
 
-    updateBalance(ammount){
-        console.log("previous balance: " + this.balance);
-        //Updates our bankBalance with the input, and reloads the page values.
-        this.balance += ammount;
+import Laptops from './Laptops.js';
+const laptopsInstance = new Laptops('https://hickory-quilled-actress.glitch.me/');
 
-        console.log("new balance: " + this.balance);
+// Load DOM objects
 
-        loadPageValues();        
-    }
+const loadBalance = document.getElementById("balance");
+const loadLoanBalance = document.getElementById("loanBalance");
+const loadWorkBalance = document.getElementById("workBalance");
+const repayLoanBtn = document.getElementById("repayLoanBtn");
+const loanBtn = document.getElementById("loanBtn");
+const workBtn = document.getElementById("workBtn");
+const bankBtn = document.getElementById("bankBtn");
+const laptopSelect = document.getElementById("laptopSelect");
+const laptopFeatures = document.getElementById("laptopFeatures");
+const productImg = document.getElementById("productImg");
+const productTitle = document.getElementById("productTitle");
+const productDesc = document.getElementById("productDesc");
+const productPrice = document.getElementById("productPrice");
+const productBtn = document.getElementById("productBtn");
 
-    getLoan(balance, loan){
-        //if loanCount is 0, continue, else refuse loan.
-        if(this.loanBalance === 0){
-            //if the loan is above double the balance refuse loan else continue
-            if(loan <= balance*2){
-                console.log("loan Allowed ammount: "+loan)
-                //updates our balance with the input
-                this.updateBalance(loan);
-                //updates our loanBalance with a negative input.
-                this.updateLoanBalance(-loan);
-            } else {
-                console.log("error, loan sum to large");
-            }
-
-        } else {
-            console.log("error, loan already taken");
-        }
-    }
-
-    getLoanBalance(){
-        return this.loanBalance;
-    }
-
-    updateLoanBalance(ammount){
-        console.log("updateLoanBalance - Loanbalance: "+this.loanBalance+", updateAmmount: "+ammount);
-
-        //Updates our loanbalance with the input and reloads the page values.
-        this.loanBalance += ammount;
-
-        console.log("updateLoanBalance - newLoanBalance: "+this.loanBalance);
-        loadPageValues();
-    }
-}
-
-class work{
-
-    constructor(workBalance, salary){
-        this.workBalance = workBalance;
-        this.salary = salary;
-    }
-
-    //Instanciates our Bank Class.
-    bankSession = new Bank(100,0,0,0);
-
-    getWorkBalance(){
-        //returns our workBalance
-        return this.workBalance;
-    }
-
-    work(salary){
-        //adds our salary to our workBalance, and updates the page values.
-        this.workBalance += salary;
-
-        loadPageValues();
-    }
-
-    bankTransfer(){
-        // first we check if the user has an outstanding loan
-        if(this.bankSession.loanBalance != 0){
-            // then we check if the loanBalance is below 100
-            if(this.bankSession.loanBalance < 100){
-                let remainingFunds = this.workBalance + this.bankSession.loanBalance;
-
-                // if the loanBalance is below 100, we update the balance with the remaining funds, and then we zero our loanBalance with math.abs
-                this.bankSession.updateBalance(remainingFunds);
-                this.bankSession.updateLoanBalance(Math.abs(this.bankSession.loanBalance));
-            } else {
-                // if the loanBalance is above 100, we first calculate 10% of our workBalance.
-                let deduction = this.workBalance*0.1;
-                // then we calculate the remaining 90%.
-                let transferAmmount = this.workBalance-deduction;
-        
-                //we then transfer 90% to our bankBalance, and 10% to our loanBalance.
-                this.bankSession.updateBalance(transferAmmount);
-                this.bankSession.updateLoanBalance(deduction);
-            }
-        } else {
-            // if we do not have a current loanBalance, we transfer our workBalance directly to our loanBalance.
-            this.bankSession.updateBalance(this.workBalance);
-        }
-
-        //Zeroes out the workBalance and loads our page values.
-        this.workBalance = 0;
-        loadPageValues();
-    }
-
-    loanTransfer(){
-        //First we calculate wether we have funds remaining after transfering the money from workBalance to loanBalance.
-        let remainingLoanAmmount = this.workBalance + this.bankSession.loanBalance;
-
-
-        console.log("workbalance: "+this.workBalance+", loanbalance: "+this.bankSession.loanBalance+", remainingLoanAmmount: "+remainingLoanAmmount);
-
-        //If we have money remaining
-        if(remainingLoanAmmount > 0){
-            
-
-            //we zero out the loanBalance using the current loan balance and Math.abs to turn the negative number positive aka. -200 + 200 = 0
-            this.bankSession.updateLoanBalance(Math.abs(this.bankSession.loanBalance));
-            //then we transfer the remaining funds to the bankBalance
-            this.bankSession.updateBalance(remainingLoanAmmount);
-        } else {
-
-            //if we do not have money remaining after the loanTransfer, we simply update the loanBalance and add our workBalance to our loanBalance.
-            this.bankSession.updateLoanBalance(this.workBalance);
-        }
-
-        
-
-        loadPageValues();
-    }
-
-}
-
-class laptops{
-
-    constructor(apiUrl){
-        this.apiUrl = apiUrl;
-        this.laptopPath = apiUrl+'computers';
-        this.laptopID = '';
-        this.data = {};
-    }
-
-
-
-    async laptopApi(){
-        console.log(this.laptopPath);
-        
-        const req = await fetch(this.laptopPath);
-        const post = await req.json();
-
-        this.data = post;
-    }
-
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const worksession = new work(0, 0);
-const laptopsession = new laptops('https://hickory-quilled-actress.glitch.me/');
 
 // Here we write the function to populate our html objects with the values from our javascript
 function loadPageValues(){
     
-    // we access the banking values through the id on the div
-    document.getElementById("balance").innerText = worksession.bankSession.getBalance();
-
-    document.getElementById("loan").innerText = worksession.bankSession.getLoanBalance();
-
-    document.getElementById("workBalance").innerText = worksession.getWorkBalance();
-
-    document.getElementById("repayLoanBtn").style.display = 'none';
+    // we access the banking values through the id on the different div's that we set in our dom section
+    loadBalance.innerText = bankInstance.getBalance();
+    loadLoanBalance.innerText = bankInstance.getLoanBalance();
+    loadWorkBalance.innerText = workInstance.getWorkBalance();
+    repayLoanBtn.style.display = 'none';
 
 
-    if(worksession.bankSession.loanBalance < 0){
-        document.getElementById("repayLoanBtn").style.display = 'block';
+    if(bankInstance.loanBalance < 0){
+        repayLoanBtn.style.display = 'block';
 
     }
 
@@ -200,10 +46,8 @@ function loadPageValues(){
 
 
 function loanPrompt(){
-    worksession.bankSession.getLoan(worksession.bankSession.getBalance(),parseInt(prompt()));
+    bankInstance.getLoan(bankInstance.getBalance(),parseInt(prompt()));
 }
-
-
 
 console.log("Script Preinitialization");
 
@@ -211,30 +55,82 @@ loadPageValues();
 
 
 
-document.getElementById("loanBtn").addEventListener("click", loanPrompt);
-
-document.getElementById("workBtn").addEventListener("click", () => worksession.work(100));
-
-document.getElementById("bankBtn").addEventListener("click", () => worksession.bankTransfer());
-
-document.getElementById("repayLoanBtn").addEventListener("click", () => worksession.loanTransfer());
+loanBtn.addEventListener("click", loanPrompt);
+workBtn.addEventListener("click", () => workInstance.work(100));
+bankBtn.addEventListener("click", () => workInstance.bankTransfer());
+repayLoanBtn.addEventListener("click", () => workInstance.loanTransfer());
 
 
 
 
-await laptopsession.laptopApi();
+await laptopsInstance.laptopApi();
 
-let laptopOptions = `<option selected>Pick a laptop</option>`;
-let laptopSelect = document.getElementById("laptopSelect");
+let laptopOptions = ``;
 
-
-laptopsession.data.forEach(element => {
-    laptopOptions += `<option data-id='${element.id}'>${element.title}</option>`;
+laptopsInstance.data.forEach(element => {
+    laptopOptions += `<option value='${element.id-1}'>${element.title}</option>`;
 });
 
 laptopSelect.innerHTML = laptopOptions;
 
 
 
+let features = `<ul>`;
 
-console.log(laptopsession.data);
+let laptop = laptopsInstance.data[0];
+laptop.specs.forEach(element => {
+    features +=`<li><p>${element}</p></li>`;
+});
+
+productImg.src = laptopsInstance.apiUrl+laptop.image;
+productTitle.innerHTML = laptop.title;
+productDesc.innerHTML = laptop.description;
+productPrice.innerHTML = laptop.price+" DKK";
+
+features += `</ul>`;
+
+console.log(features);
+
+laptopFeatures.innerHTML = features;
+
+
+
+laptopSelect.addEventListener("change", (event) => {
+    let features = `<ul>`;
+
+    console.log(event.target.value);
+    
+    let laptop = laptopsInstance.data[event.target.value];
+    laptop.specs.forEach(element => {
+        features +=`<li><p>${element}</p></li>`;
+    });
+
+    productImg.src = laptopsInstance.apiUrl+laptop.image;
+    productTitle.innerHTML = laptop.title;
+    productDesc.innerHTML = laptop.description;
+    productPrice.innerHTML = laptop.price+" DKK";
+    
+    features += `</ul>`;
+
+    console.log(features);
+
+    laptopFeatures.innerHTML = features;
+
+}, false);
+
+productBtn.addEventListener("click", (event) => {
+    let id = laptopSelect.value;
+
+    laptopsInstance.laptopPurchase(id);
+
+});
+
+
+
+    
+
+
+
+
+
+console.log(laptopsInstance.data);
