@@ -6,7 +6,7 @@ import Work from './Work.js';
 const workInstance = new Work(0,100, bankInstance);
 
 import Laptops from './Laptops.js';
-const laptopsInstance = new Laptops('https://hickory-quilled-actress.glitch.me/');
+const laptopsInstance = new Laptops('https://hickory-quilled-actress.glitch.me/', bankInstance);
 
 // Load DOM objects
 
@@ -41,7 +41,27 @@ function loadPageValues(){
 
     }
 
-    console.log("Script Postinitialization");
+}
+
+function loadFeatures(id){
+    // Loads the first Laptop data to features
+    let features = `<ul>`;
+
+    let laptop = laptopsInstance.data[id];
+    laptop.specs.forEach(element => {
+        features +=`<li><p>${element}</p></li>`;
+    });
+
+    productImg.src = laptopsInstance.apiUrl+laptop.image;
+    productTitle.innerHTML = laptop.title;
+    productDesc.innerHTML = laptop.description;
+    productPrice.innerHTML = laptop.price+" DKK";
+
+    features += `</ul>`;
+
+    console.log(features);
+
+    laptopFeatures.innerHTML = features;
 }
 
 
@@ -49,20 +69,30 @@ function loanPrompt(){
     bankInstance.getLoan(bankInstance.getBalance(),parseInt(prompt()));
 }
 
-console.log("Script Preinitialization");
 
 loadPageValues();
 
 
+// Button Click events.
+loanBtn.addEventListener("click", () => {
+    loanPrompt();
+    loadPageValues();
+});
+workBtn.addEventListener("click", () => {
+    workInstance.work(100);
+    loadPageValues();
+});
+bankBtn.addEventListener("click", () => {
+    workInstance.bankTransfer();
+    loadPageValues();
+});
+repayLoanBtn.addEventListener("click", () => {
+    workInstance.loanTransfer();
+    loadPageValues();
+});
 
-loanBtn.addEventListener("click", loanPrompt);
-workBtn.addEventListener("click", () => workInstance.work(100));
-bankBtn.addEventListener("click", () => workInstance.bankTransfer());
-repayLoanBtn.addEventListener("click", () => workInstance.loanTransfer());
 
-
-
-
+// laptop Api load
 await laptopsInstance.laptopApi();
 
 let laptopOptions = ``;
@@ -73,64 +103,22 @@ laptopsInstance.data.forEach(element => {
 
 laptopSelect.innerHTML = laptopOptions;
 
+//loads the features of the first laptop
+loadFeatures(0);
 
-
-let features = `<ul>`;
-
-let laptop = laptopsInstance.data[0];
-laptop.specs.forEach(element => {
-    features +=`<li><p>${element}</p></li>`;
-});
-
-productImg.src = laptopsInstance.apiUrl+laptop.image;
-productTitle.innerHTML = laptop.title;
-productDesc.innerHTML = laptop.description;
-productPrice.innerHTML = laptop.price+" DKK";
-
-features += `</ul>`;
-
-console.log(features);
-
-laptopFeatures.innerHTML = features;
-
-
+// Loads the changed Laptop data to features based of selected options
 
 laptopSelect.addEventListener("change", (event) => {
-    let features = `<ul>`;
-
-    console.log(event.target.value);
-    
-    let laptop = laptopsInstance.data[event.target.value];
-    laptop.specs.forEach(element => {
-        features +=`<li><p>${element}</p></li>`;
-    });
-
-    productImg.src = laptopsInstance.apiUrl+laptop.image;
-    productTitle.innerHTML = laptop.title;
-    productDesc.innerHTML = laptop.description;
-    productPrice.innerHTML = laptop.price+" DKK";
-    
-    features += `</ul>`;
-
-    console.log(features);
-
-    laptopFeatures.innerHTML = features;
+    loadFeatures(event.target.value);
 
 }, false);
 
+
+// purchase btn trigger
 productBtn.addEventListener("click", (event) => {
     let id = laptopSelect.value;
 
-    laptopsInstance.laptopPurchase(id);
-
+    console.log("purchase start");
+    laptopsInstance.laptopPurchase(id, bankInstance);
+    loadPageValues();
 });
-
-
-
-    
-
-
-
-
-
-console.log(laptopsInstance.data);
