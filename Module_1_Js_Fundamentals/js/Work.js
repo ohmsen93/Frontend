@@ -22,7 +22,7 @@ class Work{
         // first we check if the user has an outstanding loan
         if(this.bankInstance.loanBalance != 0){
             // then we check if the loanBalance is below 100
-            if(this.bankInstance.loanBalance < 100){
+            if(Math.abs(this.bankInstance.loanBalance) < 100){
                 let remainingFunds = this.workBalance + this.bankInstance.loanBalance;
 
                 // if the loanBalance is below 100, we update the balance with the remaining funds, and then we zero our loanBalance with math.abs
@@ -42,7 +42,6 @@ class Work{
             // if we do not have a current loanBalance, we transfer our workBalance directly to our loanBalance.
             this.bankInstance.updateBalance(this.workBalance);
         }
-
         //Zeroes out the workBalance and loads our page values.
         this.workBalance = 0;
     }
@@ -50,8 +49,6 @@ class Work{
     loanTransfer(){
         //First we calculate wether we have funds remaining after transfering the money from workBalance to loanBalance.
         let remainingLoanAmmount = this.workBalance + this.bankInstance.loanBalance;
-
-
         console.log("workbalance: "+this.workBalance+", loanbalance: "+this.bankInstance.loanBalance+", remainingLoanAmmount: "+remainingLoanAmmount);
 
         //If we have money remaining
@@ -62,10 +59,14 @@ class Work{
             this.bankInstance.updateLoanBalance(Math.abs(this.bankInstance.loanBalance));
             //then we transfer the remaining funds to the bankBalance
             this.bankInstance.updateBalance(remainingLoanAmmount);
+            //and then we zero the workBalance
+            this.workBalance = 0;
         } else {
 
             //if we do not have money remaining after the loanTransfer, we simply update the loanBalance and add our workBalance to our loanBalance.
             this.bankInstance.updateLoanBalance(this.workBalance);
+            //and then we zero the workBalance
+            this.workBalance = 0;
         }
 
     }
