@@ -1,4 +1,5 @@
-@import url('https://fonts.google.com/specimen/Love+Ya+Like+A+Sister?query=Love+Ya+Like+a+sister');
+@import url('https://fonts.googleapis.com/css2?family=Love+Ya+Like+A+Sister&family=Sanchez&display=swap');
+
 
 
 body {
@@ -73,8 +74,15 @@ footer{
 }
 
 
-#WelcomeText h1{
+h1{
   font-family: 'Love Ya Like a sister';
+  color: #FFF;
+}
+
+h3{
+  font-family: 'Sanchez';
+  color: #FFF;
+
 }
 
 /* Login */
