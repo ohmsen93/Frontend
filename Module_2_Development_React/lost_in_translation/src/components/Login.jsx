@@ -13,15 +13,15 @@ import LogoBg from '../Resources/Splash.svg';
 
 const Login = () => {
     const dispatch = useDispatch();
-    const user = useSelector((state) => state);
+    const state = useSelector((state) => state);
     const navigate = useNavigate();
 
     const { register, handleSubmit, formState: { errors } } = useForm();
 
-    console.log((user.user));
+    console.log("loginLog: ",(state));
 
 
-    /*
+    
     const userCheck = (user) => {
         if(user !== undefined){
             return true
@@ -30,19 +30,19 @@ const Login = () => {
         }
     }
 
-
     useEffect(() => {
-        if(userCheck(user.user.username) === true){
+        if(userCheck(state.user.username) === true){
             //redirect to translator
             console.log("redirect translator");
             navigate('translator');
         }
-    }, [user])
-    */
+    }, [state])
 
 
     const onSubmit = data => (
         dispatch(addUserAsync(data.username))
+
+        
 
     )
 

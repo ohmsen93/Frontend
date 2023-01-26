@@ -1,15 +1,38 @@
 import TextInput from "./TextInput";
 import SignOutput from "./SignOutput";
 
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from "react";
+
 const Translator = () => {
+    const user = useSelector((state) => state);
+    const navigate = useNavigate();
+
+    const userCheck = (user) => {
+        if(user !== undefined){
+            return true
+        } else {
+            return false
+        }
+    }
+
+
+
+    useEffect(() => {
+        if(userCheck(user.user) === false){
+            //redirect to frontpage
+            console.log("redirect root");
+            navigate('/');
+        }
+    }, [user])
+
+
     return (
-        <div id="TranslationContainer" className="content container col">
-            <div className="row">
+            <>
                 <TextInput/>
                 <SignOutput/>
-            </div>
-            <button type="button" className="btn btn-primary mb-3">Translate</button>
-        </div>
+            </>
     )
 }
 

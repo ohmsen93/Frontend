@@ -59,7 +59,7 @@ export const addUserAsync = createAsyncThunk(
 export const Userslice = createSlice({
     name: 'User',
     initialState: {
-        username: '',
+        username: undefined,
         translations: []
     },
     reducers: {
@@ -68,9 +68,10 @@ export const Userslice = createSlice({
                 username: action.username,
                 translations: []
             };
-            state = User;
 
-        },
+
+            state = User;
+        }
     },
     extraReducers: {
         [getUserAsync.fulfilled]: (state, action) => {
@@ -85,9 +86,16 @@ export const Userslice = createSlice({
 
             if(action.payload[2] === 'set'){
                 console.log("setObj: ", action.payload[1]);
+                
+                //state.user = action.payload[1];
 
-                state.user = action.payload[1].user;
+                // SETS EXISTING USER
+
+                return {...state, username: action.payload[1].username, translations: action.payload[1].translations, id: action.payload[1].id }
+                
             } else {
+
+                // ADDS NEW USER
                 return {...state, username: action.payload[1].username}
             }
         },
