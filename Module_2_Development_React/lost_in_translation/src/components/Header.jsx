@@ -3,13 +3,11 @@ import { useNavigate } from 'react-router-dom';
 
 
 const Header = () => {
-    const user = useSelector((state) => state.User);
+    const state = useSelector((state) => state);
     const navigate = useNavigate();
 
 
-    /*
-    console.log(user.user.username);
-
+    console.log("headerLog: ", state.user)
 
     const userCheck = (user) => {
         if(user !== undefined){
@@ -18,13 +16,17 @@ const Header = () => {
             return false
         }
     }
-*/
+
+    const logout = () => {
+        
+    }
 
 
     return (
         <header className="p-2 col-12">
             <h1 className="col-5 offset-2">Lost in Translation</h1>
-            {/*(userCheck(user.user.username) === true) ? <button onClick={() => navigate('/profile')} id='Profile'>{user.user.username}</button> : ''*/ }
+            {(userCheck(state.user.username) === true) ? <button onClick={() => navigate('/profile')} id='Profile'>{state.user.username}</button> : '' }
+
         </header>
     );
 
