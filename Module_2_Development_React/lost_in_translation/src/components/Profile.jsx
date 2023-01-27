@@ -24,12 +24,31 @@ const Profile = () => {
         }
     }, [state])
 
+    const getTranslationsList = (translations) => {
 
+        const transArr = []
+        let limit = ((translations.length < 10) ? translations.length : 10);
+
+        for (let translation = 0; translation < translations.length; translation++) {
+            const element = translations[translation];
+            transArr.push(element);
+        }
+
+
+        return transArr.slice((translations.length - limit),translations.length);
+    }
+
+    const translationList = getTranslationsList(state.user.translations);
+
+    console.log("translationList: ",translationList);
 
     return (
         <div id="profile">
             <button onClick={() => navigate('/translator')} id='Translator btn'>To translator</button>
             <button  id=''>logout</button>
+            <ul>
+                {translationList.map(translation => (<li>{translation}</li>))}
+            </ul>
         </div>
     )
 }
