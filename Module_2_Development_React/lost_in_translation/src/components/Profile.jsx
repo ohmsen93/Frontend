@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
+import { clearUser } from '../redux-parts/userSlice';
 
 
 const Profile = () => {
@@ -42,10 +43,15 @@ const Profile = () => {
 
     console.log("translationList: ",translationList);
 
+    const handleLogOutClicked = () => {
+        dispatch(clearUser())
+        navigate("/")
+    }
+
     return (
         <div id="profile">
             <button onClick={() => navigate('/translator')} id='Translator btn'>To translator</button>
-            <button  id=''>logout</button>
+            <button onClick={handleLogOutClicked}>logout</button>
             <ul>
                 {translationList.map(translation => (<li>{translation}</li>))}
             </ul>

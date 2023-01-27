@@ -71,6 +71,12 @@ export const Userslice = createSlice({
 
 
             state = User;
+        },
+        clearUser: (state, action) => {
+            return {
+                username: undefined,
+                translations: []
+            }
         }
     },
     extraReducers: {
@@ -102,5 +108,5 @@ export const Userslice = createSlice({
     },
 });
 
-export const { addUser } = Userslice.actions;
+export const { addUser, clearUser } = Userslice.actions;
 export default Userslice.reducer;

@@ -7,9 +7,10 @@ import { addTranslationAsync, getTranslationsAsync } from '../redux-parts/transl
 
 const SignOutput = () => {
     const dispatch = useDispatch();
-    const state = useSelector((state) => state);
 
-    const wordToTranslate =  state.user.translations[(state.user.translations.length-1)];
+    const translations =  useSelector(state => state.translation.translations)
+
+    const wordToTranslate = translations[translations.length - 1]
 
     const SignTranslator = (query) => {
 
@@ -30,13 +31,13 @@ const SignOutput = () => {
     }
 
 
-    const translationPathArr = SignTranslator(wordToTranslate);
+    //const translationPathArr = SignTranslator(wordToTranslate);
 
 
     return (
         
         <>
-            {translationPathArr.map(img => (<img srcSet={img} style={{width:50, height:50}}/>))}
+            { (wordToTranslate !== undefined) ? [...wordToTranslate].map(img => (<img srcSet={"individial_signs/" + img + ".png"} style={{width:50, height:50}}/>)) : ""}
         </>
     );
 }
